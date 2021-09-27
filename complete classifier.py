@@ -49,10 +49,8 @@ def train(epoch, device, train_loader, val_loader, total,train_state=None,resume
     for epoch in range(starting_epoch, epoch):
         with tqdm(total=total, desc=f'Epoch {epoch + 1}/{total_epoch}', postfix=dict, mininterval=0.3) as pbar:
             for step, (x, y) in enumerate(train_loader):
-                # print(x.size(),y.size())
-                x, y = x.to(device), y.to(device)
-                # print(x.size(),y.size())
 
+                x, y = x.to(device), y.to(device)
                 model.train()
                 logits = model(x)
                 loss = criteon(logits, y)
@@ -61,10 +59,8 @@ def train(epoch, device, train_loader, val_loader, total,train_state=None,resume
                 loss.backward()
                 optimizer.step()
 
-                # viz.line([loss.item()], [global_step], win='loss', update='append')
                 global_step += 1
                 train_loss_list.append(loss.item())
-                # print('epoch: ', epoch, 'step:', step, 'loss: ', loss.item())
 
                 pbar.set_postfix(**{'loss': loss.item(),"lr" : get_lr(optimizer)})
                 pbar.update(1)
@@ -81,28 +77,8 @@ def train(epoch, device, train_loader, val_loader, total,train_state=None,resume
                 'model_state_dict': model.state_dict(),
                 'optimizer_state_dict': optimizer.state_dict(),
             }
-            # torch.save(model.state_dict(), 'best.mdl')
             model_path = "./model/" + "epoch{:03d} loss_{} acc_{}.pt".format(epoch + 1,loss.item(),val_acc)
             torch.save(checkpoint, model_path)
-        # if epoch % 1 == 0:
-        #     val_acc = evalute(model, val_loader, device)
-        #     acc_val_list.append(val_acc)
-        #     if val_acc > best_acc:
-        #         best_epoch = epoch
-        #         best_acc = val_acc
-        #         checkpoint = {
-        #             'epoch': epoch,
-        #             'model_state_dict': model.state_dict(),
-        #             'optimizer_state_dict': optimizer.state_dict(),
-        #         }
-        #         # torch.save(model.state_dict(), 'best.mdl')
-        #         model_path = "./model/" + "epoch_{:03d} loss_.pt".format(epoch,)
-        #         torch.save(checkpoint, model_path)
-
-    # print('best acc:', best_acc, 'best epoch:', best_epoch)
-
-    # model.load_state_dict(torch.load('best.mdl'))
-    # print('loaded from ckpt!')
 
 
 if __name__ == '__main__':
