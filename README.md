@@ -6,4 +6,4 @@ Image-classification
 
 		   |---complete classifier.py:image classification
 
-    	  |---model.py:backbone
+    	   |---model.py:backbone
