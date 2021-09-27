@@ -3,24 +3,14 @@ from torch import optim, nn
 # import visdom
 import torchvision
 from torch.utils.data import DataLoader
-from model import resnet101
+
 import torchvision.transforms as transforms
 import matplotlib.pyplot as plt
-import argparse
 from tqdm import tqdm
 
-def parse_args():
-    # 1、使用argparse的第一步是创建一个 ArgumentParser对象：
-    parser = argparse.ArgumentParser(description="defeat detect")
-    # 2、添加一个位置参数，默认视为字符串
-    parser.add_argument("echo", help="echo the string you use here")
-    # 3、添加一个整数位置参数
-    parser.add_argument("--epochs", default=10, help="train epochs", type=int)
-    # 4、添加可选参数 ,指定一个新关键字action，并为其指定值 "store_true"。这意味着，如果指定了该选项，则将值分配True给args.verbose。不指定它暗含False。
-    parser.add_argument("--resume", help="increase output verbosity",
-                        action="store_true")
-    parser.add_argument("--checkpoint", default="0", help="checkpoint num")
-    return parser.parse_args()
+from model import resnet18,resnet34,resnet50,resnet101,resnet152,resnext50_32x4d,resnext101_32x8d,wide_resnet50_2,wide_resnet101_2,mobilenet_v2
+
+
 
 
 def evalute(model, loader, device):
