@@ -2,8 +2,8 @@
 
 Image-classification
 
-​								 |---model:save weight file
+								 |---model:save weight file
 
-​							     |---complete classifier.py:image classification
+						     |---complete classifier.py:image classification
 
-​								 |---model.py:backbone
+    						 |---model.py:backbone
