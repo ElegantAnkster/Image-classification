@@ -1,13 +1,10 @@
 import torch
-from torch import optim, nn
-# import visdom
 import torchvision
-from torch.utils.data import DataLoader
-
-import torchvision.transforms as transforms
 import matplotlib.pyplot as plt
+import torchvision.transforms as transforms
 from tqdm import tqdm
-
+from torch import optim, nn
+from torch.utils.data import DataLoader
 from model import resnet18,resnet34,resnet50,resnet101,resnet152,resnext50_32x4d,resnext101_32x8d,wide_resnet50_2,wide_resnet101_2,mobilenet_v2
 
 
