@@ -3,7 +3,7 @@ from torch import optim, nn
 # import visdom
 import torchvision
 from torch.utils.data import DataLoader
-from model import ResNet
+from model import resnet101
 import torchvision.transforms as transforms
 import matplotlib.pyplot as plt
 import argparse
@@ -37,10 +37,12 @@ def evalute(model, loader, device):
         correct += torch.eq(pred, y).sum().float().item()
 
     return correct / total
-
+def get_lr(optimizer):
+    for param_group in optimizer.param_groups:
+        return param_group['lr']
 
 def train(epoch, device, train_loader, val_loader, total,train_state=None,resume=False):
-    model = ResNet().to(device)
+    model = resnet101().to(device)
     optimizer = optim.Adam(model.parameters(), lr=lr)
     criteon = nn.CrossEntropyLoss()
     best_acc, best_epoch = 0, 0
@@ -77,7 +79,7 @@ def train(epoch, device, train_loader, val_loader, total,train_state=None,resume
                 train_loss_list.append(loss.item())
                 # print('epoch: ', epoch, 'step:', step, 'loss: ', loss.item())
 
-                pbar.set_postfix(**{'loss': loss.item()})
+                pbar.set_postfix(**{'loss': loss.item(),"lr" : get_lr(optimizer)})
                 pbar.update(1)
 
             val_acc = evalute(model, val_loader, device)
@@ -85,15 +87,15 @@ def train(epoch, device, train_loader, val_loader, total,train_state=None,resume
             if val_acc > best_acc:
                 best_acc = val_acc
                 best_epoch = epoch
-            print(f"\nthe epoch{epoch} accuracy is {val_acc}")
-            print(f"best_accuracy is {best_acc}")
+            print(f"\nthe epoch{epoch + 1} accuracy is {val_acc}")
+            print(f"best_accuracy(epoch{best_epoch + 1}) is {best_acc}")
             checkpoint = {
                 'epoch': epoch,
                 'model_state_dict': model.state_dict(),
                 'optimizer_state_dict': optimizer.state_dict(),
             }
             # torch.save(model.state_dict(), 'best.mdl')
-            model_path = "./model/" + "epoch{:03d} loss_{} acc_{}.pt".format(epoch,loss.item(),val_acc)
+            model_path = "./model/" + "epoch{:03d} loss_{} acc_{}.pt".format(epoch + 1,loss.item(),val_acc)
             torch.save(checkpoint, model_path)
         # if epoch % 1 == 0:
         #     val_acc = evalute(model, val_loader, device)
@@ -118,8 +120,8 @@ def train(epoch, device, train_loader, val_loader, total,train_state=None,resume
 
 if __name__ == '__main__':
 
-    epoch = 50
-    batchsz = 8
+    epoch = 100
+    batchsz = 100
     lr = 1e-3
     device = torch.device('cuda:0')
     torch.manual_seed(1234)
